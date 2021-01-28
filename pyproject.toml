@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "feeder"
+version = "0.1.0"
+description = ""
+authors = ["srntqn <serenityqn@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+requests = "^2.23.0"
+kubernetes = "^10.0.1"
+
+[tool.poetry.dev-dependencies]
+requests = "^2.23.0"
+kubernetes = "^10.0.1"
+pycodestyle = "^2.5.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

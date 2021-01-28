@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feeder
+spec:
+  selector:
+    matchLabels:
+      app: feeder
+  template:
+    metadata:
+      labels:
+        app: feeder
+    spec:
+      containers:
+      - name: feeder
+        image: feeder
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+        - name: app
+          value: docker-py
+        - name: docker_user
+          valueFrom:
+            secretKeyRef:
+              name: docker-secret
+              key: docker_user 
+        - name: docker_password
+          valueFrom:
+            secretKeyRef:
+              name: docker-secret
+              key: docker_password
+        securityContext:
+          privileged: true
