@@ -7,7 +7,7 @@ from kubernetes.client import (
 )
 
 
-class KubernetesWrapper:
+class KubernetesCluster:
     def __init__(self, local: bool) -> None:
         if local is True:
             self.conf = config.load_kube_config()
@@ -23,10 +23,5 @@ class KubernetesWrapper:
         except ApiException as e:
             print(f"Exception when calling CoreV1Api->list_namespaced_pod: {e}")
         for p in pods.items:
-            print(p)
             return p
 
-
-k8s = KubernetesWrapper(local=True)
-
-k8s.get_pod("monitoring", "prometheus")
