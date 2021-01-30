@@ -13,3 +13,5 @@ class GitRepo:
     def clone_git_repo(self) -> Repo:
         return self.repo.clone_from(self.repo_url, path.join(self.local_dir, self.repo_name), branch=self.repo_branch)
 
+    def pull_git_repo(self):
+        return self.repo(path.join(self.local_dir, self.repo_name)).remotes.origin.pull()
