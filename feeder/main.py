@@ -43,28 +43,6 @@ def getRegistryImageId():
     r = get(url=manifest, headers=headers)
     return r.headers['Docker-Content-Digest']
 
-def getContainerImageName():
-    p = getPod(app)
-    for c in p.spec.containers:
-        if c.name == app:
-            return c.image
-
-
-def getCurrentImageId():
-    p = getPod(app)
-    for c in p.status.container_statuses:
-        if c.name == app:
-            return c.image_id.split('@')[1]
-
-
-def deletePod():
-    p = getPod(app)
-    try:
-        core.delete_namespaced_pod(p.metadata.name, ns,
-                                   body=client.V1DeleteOptions())
-    except ApiException as e:
-        print(f"Exception when calling CoreV1Api->delete_namespaced_pod: {e}")
-
 
 def checkImageUpdate():
     i = getContainerImageName()

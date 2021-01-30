@@ -3,8 +3,10 @@ from kubernetes.client.rest import ApiException
 from kubernetes.client import (
     CoreV1Api,
     AppsV1Api,
-    V1Pod
+    V1Pod,
+    V1DeleteOptions
 )
+from k8s_pod import KubernetesPod
 
 
 class KubernetesCluster:
@@ -25,3 +27,9 @@ class KubernetesCluster:
         for p in pods.items:
             return p
 
+    def delete_pod(self, namespace: str, pod: KubernetesPod):
+        try:
+            self.core().delete_namespaced_pod(pod.get_pod_name(), namespace,
+                                              body=V1DeleteOptions())
+        except ApiException as e:
+            print(f"Exception when calling CoreV1Api->delete_namespaced_pod: {e}")
