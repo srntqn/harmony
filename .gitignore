@@ -1,5 +1,6 @@
 design.yaml
-nginx
+harmony/nginx
+harmony/__pycache__
 #vscode
 .vscode/
 .history
