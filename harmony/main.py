@@ -2,7 +2,7 @@ from project import Project
 from git_repo import GitRepo
 from core_config import CoreConfig
 from k8s_cluster import KubernetesCluster
-from k8s_pod import KubernetesPod
+from k8s_deployment import KubernetesDeployment
 import time
 from os import path
 
@@ -28,13 +28,13 @@ def run():
             repo.clone_git_repo()
 
         app = Project(name, version_file_name, version_file_path, git_url)
-        pod = KubernetesPod(cluster.get_pod(app_namespace, app_label))
+        pod = KubernetesDeployment(cluster.get_deployment(app_namespace, app_label))
 
         version_in_cluster = pod.get_container_image_tag()
         version_in_git = app.get_app_version()
 
         if version_in_git != version_in_cluster:
-            cluster.delete_pod(app_namespace, pod)
+            pass
             print("Version in cluster: {0}, version in git: {1}. Recreating pod...".format(version_in_cluster,
                                                                                            version_in_git))
         else:
