@@ -20,6 +20,3 @@ class KubernetesDeployment:
         return self.deployment.spec.template.spec.containers[0].image.split(':')[1]
 
 
-deploy = KubernetesDeployment(KubernetesCluster(True).get_deployment('default', 'nginx'))
-print(deploy.get_container_image_tag())
-

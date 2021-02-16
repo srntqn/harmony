@@ -16,7 +16,9 @@ class KubernetesCluster:
         self.core = CoreV1Api()
         self.apps = AppsV1Api()
 
-    def get_deployment(self, namespace: str, label: str) -> V1Deployment:
+    def get_deployment(self,
+                       namespace: str,
+                       label: str) -> V1Deployment:
         try:
             deployments = self.apps.list_namespaced_deployment(watch=False, namespace=namespace,
                                                                label_selector=f'app={label}')
@@ -25,4 +27,10 @@ class KubernetesCluster:
         for d in deployments.items:
             return d
 
-
+    def patch_deployment(self,
+                         deployment: V1Deployment,
+                         container_tag: str,
+                         name: str,
+                         namespace: str) -> V1Deployment:
+        deployment.spec.template.spec.containers[0].image = container_tag
+        return self.apps.patch_namespaced_deployment(name=name, namespace=namespace, body=deployment)
