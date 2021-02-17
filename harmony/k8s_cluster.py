@@ -1,29 +1,33 @@
-from kubernetes import config
-from kubernetes.client.rest import ApiException
+import os
+from distutils.util import strtobool
 from kubernetes.client import (
     CoreV1Api,
     AppsV1Api,
-    V1Deployment
+    V1Deployment,
+    Configuration,
+    ApiClient
 )
 
 
 class KubernetesCluster:
-    def __init__(self, local: bool) -> None:
-        if local is True:
-            self.conf = config.load_kube_config()
-        else:
-            self.conf = config.load_incluster_config()
-        self.core = CoreV1Api()
-        self.apps = AppsV1Api()
+    def __init__(self) -> None:
+
+        self.configuration = Configuration()
+
+        self.configuration.verify_ssl = strtobool(os.getenv('VERIFY_SSL'))
+        self.configuration.host = os.getenv('K8S_API_SERVER_HOST')
+        self.configuration.api_key['authorization'] = os.getenv('K8S_API_KEY')
+        self.configuration.api_key_prefix['authorization'] = 'Bearer'
+
+        with ApiClient(self.configuration) as api_client:
+            self.core = CoreV1Api(api_client)
+            self.apps = AppsV1Api(api_client)
 
     def get_deployment(self,
                        namespace: str,
                        label: str) -> V1Deployment:
-        try:
-            deployments = self.apps.list_namespaced_deployment(watch=False, namespace=namespace,
-                                                               label_selector=f'app={label}')
-        except ApiException as e:
-            print(f"Exception when calling CoreV1Api->list_namespaced_pod: {e}")
+        deployments = self.apps.list_namespaced_deployment(watch=False, namespace=namespace,
+                                                           label_selector='app={0}'.format(label))
         for d in deployments.items:
             return d
 

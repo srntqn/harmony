@@ -7,7 +7,7 @@ import time
 from os import path
 
 projects = CoreConfig('conf.yaml', '../').get_projects()
-cluster = KubernetesCluster(True)
+cluster = KubernetesCluster()
 
 
 def run():
