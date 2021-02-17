@@ -14,9 +14,8 @@ class KubernetesDeployment:
         return self.deployment.spec.template.spec.containers[0].name
 
     def get_container_image_name(self) -> str:
-        return self.deployment.spec.template.spec.containers[0].image
+        return self.deployment.spec.template.spec.containers[0].image.split(':')[0]
 
     def get_container_image_tag(self) -> str:
         return self.deployment.spec.template.spec.containers[0].image.split(':')[1]
-
 
