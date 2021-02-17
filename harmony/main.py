@@ -2,7 +2,7 @@ from project import Project
 from git_repo import GitRepo
 from core_config import CoreConfig
 from k8s_cluster import KubernetesCluster
-from k8s_pod import KubernetesPod
+from k8s_deployment import KubernetesDeployment
 import time
 from os import path
 
@@ -28,15 +28,22 @@ def run():
             repo.clone_git_repo()
 
         app = Project(name, version_file_name, version_file_path, git_url)
-        pod = KubernetesPod(cluster.get_pod(app_namespace, app_label))
+        deployment = KubernetesDeployment(cluster.get_deployment(app_namespace, app_label))
+        image_name = deployment.get_container_image_name()
+        deployment_name = deployment.get_deployment_name()
 
-        version_in_cluster = pod.get_container_image_tag()
+        version_in_cluster = deployment.get_container_image_tag()
         version_in_git = app.get_app_version()
 
         if version_in_git != version_in_cluster:
-            cluster.delete_pod(app_namespace, pod)
-            print("Version in cluster: {0}, version in git: {1}. Recreating pod...".format(version_in_cluster,
-                                                                                           version_in_git))
+            cluster.patch_deployment(deployment.deployment,
+                                     '{0}:{1}'.format(image_name, version_in_git),
+                                     deployment_name,
+                                     app_namespace)
+
+            print('''Version in cluster: {0}, version in git: {1}. Updating deployment...
+                  '''.format(version_in_cluster,
+                             version_in_git))
         else:
             print("Nothing was changed. Versions are equal.")
 
@@ -44,4 +51,4 @@ def run():
 if __name__ == '__main__':
     while True:
         run()
-        time.sleep(10)
+        time.sleep(20)

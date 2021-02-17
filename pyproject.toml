@@ -7,13 +7,13 @@ authors = ["srntqn <serenityqn@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.7"
 requests = "^2.23.0"
-kubernetes = "^10.0.1"
+kubernetes = "^12.0.1"
 GitPython = "^3.1.12"
 PyYAML = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
 requests = "^2.23.0"
-kubernetes = "^10.0.1"
+kubernetes = "^12.0.1"
 pycodestyle = "^2.5.0"
 GitPython = "^3.1.12"
 
