@@ -1,9 +1,9 @@
+import time
 from project import Project
 from git_repo import GitRepo
 from core_config import CoreConfig
 from k8s_cluster import KubernetesCluster
 from k8s_deployment import KubernetesDeployment
-import time
 from os import path
 
 projects = CoreConfig('conf.yaml', '../').get_projects()
@@ -20,14 +20,21 @@ def run():
         app_label = projects[app]['app_label']
         app_namespace = projects[app]['app_namespace']
 
-        repo = GitRepo(name, git_url, 'master', './')
+        repo = GitRepo(name,
+                       git_url,
+                       'master',
+                       './')
 
         if path.isdir(name):
             repo.pull_git_repo()
         else:
             repo.clone_git_repo()
 
-        app = Project(name, version_file_name, version_file_path, git_url)
+        app = Project(name,
+                      version_file_name,
+                      version_file_path,
+                      git_url)
+
         deployment = KubernetesDeployment(cluster.get_deployment(app_namespace, app_label))
         image_name = deployment.get_container_image_name()
         deployment_name = deployment.get_deployment_name()

@@ -6,6 +6,7 @@ class CoreConfig:
     def __init__(self,
                  config_name: str,
                  path_to_config: str) -> None:
+
         self.config_name = config_name
         self.path_to_config = path_to_config
 

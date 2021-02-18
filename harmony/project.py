@@ -8,6 +8,7 @@ class Project:
                  version_file_name: str,
                  version_file_path: str,
                  git_url: str) -> None:
+
         self.project_name = project_name
         self.version_file_name = version_file_name
         self.version_file_path = version_file_path

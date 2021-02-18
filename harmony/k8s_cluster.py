@@ -26,7 +26,8 @@ class KubernetesCluster:
     def get_deployment(self,
                        namespace: str,
                        label: str) -> V1Deployment:
-        deployments = self.apps.list_namespaced_deployment(watch=False, namespace=namespace,
+        deployments = self.apps.list_namespaced_deployment(watch=False,
+                                                           namespace=namespace,
                                                            label_selector='app={0}'.format(label))
         for d in deployments.items:
             return d
@@ -37,4 +38,6 @@ class KubernetesCluster:
                          name: str,
                          namespace: str) -> V1Deployment:
         deployment.spec.template.spec.containers[0].image = container_tag
-        return self.apps.patch_namespaced_deployment(name=name, namespace=namespace, body=deployment)
+        return self.apps.patch_namespaced_deployment(name=name,
+                                                     namespace=namespace,
+                                                     body=deployment)
