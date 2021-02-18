@@ -3,7 +3,6 @@ from project import Project
 from git_repo import GitRepo
 from core_config import CoreConfig
 from k8s_cluster import KubernetesCluster
-from k8s_deployment import KubernetesDeployment
 from os import path
 
 projects = CoreConfig('conf.yaml', '../').get_projects()
@@ -11,18 +10,19 @@ cluster = KubernetesCluster()
 
 
 def run():
-    for app in projects.keys():
+    for project in projects.keys():
 
-        version_file_name = projects[app]['version_file_name']
-        name = projects[app]['name']
-        version_file_path = projects[app]['version_file_path']
-        git_url = projects[app]['git_url']
-        app_label = projects[app]['app_label']
-        app_namespace = projects[app]['app_namespace']
+        version_file_name = projects[project]['version_file_name']
+        name = projects[project]['name']
+        version_file_path = projects[project]['version_file_path']
+        git_url = projects[project]['git_url']
+        git_branch = projects[project]['git_branch']
+        app_label = projects[project]['app_label']
+        app_namespace = projects[project]['app_namespace']
 
         repo = GitRepo(name,
                        git_url,
-                       'master',
+                       git_branch,
                        './')
 
         if path.isdir(name):
@@ -35,22 +35,21 @@ def run():
                       version_file_path,
                       git_url)
 
-        deployment = KubernetesDeployment(cluster.get_deployment(app_namespace, app_label))
-        image_name = deployment.get_container_image_name()
-        deployment_name = deployment.get_deployment_name()
+        deployment = cluster.get_deployment(app_namespace, app_label)
 
-        version_in_cluster = deployment.get_container_image_tag()
-        version_in_git = app.get_app_version()
+        image_name = deployment.spec.template.spec.containers[0].image.split(':')[0]
+        image_tag_in_cluster = deployment.spec.template.spec.containers[0].image.split(':')[1]
+        image_tag_in_git = app.get_app_version()
 
-        if version_in_git != version_in_cluster:
-            cluster.patch_deployment(deployment.deployment,
-                                     '{0}:{1}'.format(image_name, version_in_git),
-                                     deployment_name,
+        if image_tag_in_git != image_tag_in_cluster:
+            cluster.patch_deployment(deployment,
+                                     '{0}:{1}'.format(image_name, image_tag_in_git),
+                                     deployment.metadata.name,
                                      app_namespace)
 
-            print('''Version in cluster: {0}, version in git: {1}. Updating deployment...
-                  '''.format(version_in_cluster,
-                             version_in_git))
+            print('''Image version in cluster: {0}, image version in git: {1}. Updating deployment...
+                  '''.format(image_tag_in_cluster,
+                             image_tag_in_git))
         else:
             print("Nothing was changed. Versions are equal.")
 
