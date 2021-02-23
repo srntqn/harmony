@@ -16,3 +16,4 @@ def test_list_namespaced_deployment_call_during_get_deployment_call():
 def test_return_value_type_is_v1deployment():
     deployment = cluster.get_deployment('default', 'nginx')
     assert type(deployment) == V1Deployment
+
