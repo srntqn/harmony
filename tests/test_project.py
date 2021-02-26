@@ -1,7 +1,6 @@
-from harmony.project import Project
-from os import path
-
 import tempfile
+from os import path
+from harmony.project import Project
 
 version_file_name = 'test_version_file.yaml'
 version_file_path = tempfile.gettempdir()

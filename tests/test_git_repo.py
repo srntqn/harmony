@@ -1,6 +1,6 @@
-from harmony.git_repo import GitRepo
-from unittest import mock
 from os import path
+from unittest import mock
+from harmony.git_repo import GitRepo
 
 repo_name = 'test_git_repo'
 repo_url = 'git@github.com:srntqn/sample_harmony_version_file_source.git'
