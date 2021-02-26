@@ -1,5 +1,3 @@
-import os
-from distutils.util import strtobool
 from kubernetes.client import (
     CoreV1Api,
     AppsV1Api,
@@ -10,13 +8,16 @@ from kubernetes.client import (
 
 
 class KubernetesCluster:
-    def __init__(self) -> None:
+    def __init__(self,
+                 verify_ssl: bool,
+                 host: str,
+                 api_key: str) -> None:
 
         self.configuration = Configuration()
 
-        self.configuration.verify_ssl = strtobool(os.getenv('VERIFY_SSL'))
-        self.configuration.host = os.getenv('K8S_API_SERVER_HOST')
-        self.configuration.api_key['authorization'] = os.getenv('K8S_API_KEY')
+        self.configuration.verify_ssl = verify_ssl
+        self.configuration.host = host
+        self.configuration.api_key['authorization'] = api_key
         self.configuration.api_key_prefix['authorization'] = 'Bearer'
 
         with ApiClient(self.configuration) as api_client:
