@@ -1,10 +1,10 @@
 import time
-from project import Project
-from git_repo import GitRepo
-from core_config import CoreConfig
-from k8s_cluster import KubernetesCluster
 from os import path, getenv
 from distutils.util import strtobool
+from core_config import CoreConfig
+from git_repo import GitRepo
+from k8s_cluster import KubernetesCluster
+from project import Project
 
 projects = CoreConfig('conf.yaml', '../').get_projects()
 cluster = KubernetesCluster(strtobool(getenv('VERIFY_SSL')),
