@@ -3,10 +3,13 @@ from project import Project
 from git_repo import GitRepo
 from core_config import CoreConfig
 from k8s_cluster import KubernetesCluster
-from os import path
+from os import path, getenv
+from distutils.util import strtobool
 
 projects = CoreConfig('conf.yaml', '../').get_projects()
-cluster = KubernetesCluster()
+cluster = KubernetesCluster(strtobool(getenv('VERIFY_SSL')),
+                            getenv('K8S_API_SERVER_HOST'),
+                            getenv('K8S_API_KEY'))
 
 
 def run():
