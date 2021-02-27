@@ -20,7 +20,7 @@ def run():
         version_file_path = projects[project]['version_file_path']
         git_url = projects[project]['git_url']
         git_branch = projects[project]['git_branch']
-        app_label = projects[project]['app_label']
+        app_name = projects[project]['app_name']
         app_namespace = projects[project]['app_namespace']
 
         repo = GitRepo(name,
@@ -38,7 +38,7 @@ def run():
                       version_file_path,
                       git_url)
 
-        deployment = cluster.get_deployment(app_namespace, app_label)
+        deployment = cluster.get_deployment(app_name, app_namespace)
 
         image_name = deployment.spec.template.spec.containers[0].image.split(':')[0]
         image_tag_in_cluster = deployment.spec.template.spec.containers[0].image.split(':')[1]
@@ -47,7 +47,7 @@ def run():
         if image_tag_in_git != image_tag_in_cluster:
             cluster.patch_deployment(deployment,
                                      '{0}:{1}'.format(image_name, image_tag_in_git),
-                                     deployment.metadata.name,
+                                     app_name,
                                      app_namespace)
 
             print('''Image version in cluster: {0}, image version in git: {1}. Updating deployment...

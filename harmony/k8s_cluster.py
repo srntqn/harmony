@@ -1,5 +1,4 @@
 from kubernetes.client import (
-    CoreV1Api,
     AppsV1Api,
     V1Deployment,
     Configuration,
@@ -21,17 +20,12 @@ class KubernetesCluster:
         self.configuration.api_key_prefix['authorization'] = 'Bearer'
 
         with ApiClient(self.configuration) as api_client:
-            self.core = CoreV1Api(api_client)
             self.apps = AppsV1Api(api_client)
 
     def get_deployment(self,
-                       namespace: str,
-                       label: str) -> V1Deployment:
-        deployments = self.apps.list_namespaced_deployment(watch=False,
-                                                           namespace=namespace,
-                                                           label_selector='app={0}'.format(label))
-        for d in deployments.items:
-            return d
+                       name: str,
+                       namespace: str) -> V1Deployment:
+        return self.apps.read_namespaced_deployment(name=name, namespace=namespace)
 
     def patch_deployment(self,
                          deployment: V1Deployment,
