@@ -30,4 +30,3 @@ def test_get_projects():
 
     projects = config.get_projects()
     assert projects['nginx']['name'] == 'nginx'
-

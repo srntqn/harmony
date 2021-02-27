@@ -14,4 +14,3 @@ class CoreConfig:
         with open(path.join(self.path_to_config, self.config_name)) as file:
             config = yaml.load(file, Loader=yaml.FullLoader)
         return config
-

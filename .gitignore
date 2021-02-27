@@ -1,5 +1,6 @@
 design.yaml
 nginx-deployment.yaml
+poetry.toml
 harmony/nginx
 nginx/
 harmony/__pycache__
