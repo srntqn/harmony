@@ -6,12 +6,11 @@ cluster = KubernetesCluster(False,
                             'api_key')
 
 
-def test_list_namespaced_deployment_call_during_get_deployment_call():
-    cluster.apps.list_namespaced_deployment = mock.MagicMock()
-    cluster.get_deployment('default', 'nginx')
-    cluster.apps.list_namespaced_deployment.assert_called_once_with(watch=False,
-                                                                    namespace='default',
-                                                                    label_selector='app=nginx')
+def test_read_namespaced_deployment_call_during_get_deployment_call():
+    cluster.apps.read_namespaced_deployment = mock.MagicMock()
+    cluster.get_deployment('nginx-deployment', 'default')
+    cluster.apps.read_namespaced_deployment.assert_called_once_with(name='nginx-deployment',
+                                                                    namespace='default')
 
 
 def test_patch_namespaced_deployment_call_during_patch_deployment_call():

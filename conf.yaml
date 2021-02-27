@@ -4,5 +4,5 @@ nginx:
   git_branch: 'master'
   version_file_name: 'version.yaml'
   version_file_path: './nginx'
-  app_label: 'nginx'
+  app_name: 'nginx-deployment'
   app_namespace: 'default'
