@@ -1,6 +1,7 @@
 design.yaml
 nginx-deployment.yaml
 harmony/nginx
+nginx/
 harmony/__pycache__
 #vscode
 .vscode/

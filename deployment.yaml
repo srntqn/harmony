@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harmony
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: harmony
+  template:
+    metadata:
+      labels:
+        app: harmony
+    spec:
+      containers:
+      - name: harmony
+        image: harmony
+        resources:
+          limits:
+            memory: '128Mi'
+            cpu: '200m'
+        env:
+        - name: VERIFY_SSL
+          value: 'False'
+        - name: K8S_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: k8s-api-key
+              key: api_key
+        - name: K8S_API_SERVER_HOST
+          value: 'https://kubernetes'
+        securityContext:
+          privileged: true
