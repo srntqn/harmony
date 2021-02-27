@@ -6,7 +6,7 @@ from git_repo import GitRepo
 from k8s_cluster import KubernetesCluster
 from project import Project
 
-projects = CoreConfig('conf.yaml', './').get_projects()
+projects = CoreConfig('conf.yaml', 'config').get_projects()
 cluster = KubernetesCluster(strtobool(getenv('VERIFY_SSL')),
                             getenv('K8S_API_SERVER_HOST'),
                             getenv('K8S_API_KEY'))
