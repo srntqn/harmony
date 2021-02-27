@@ -1,7 +1,7 @@
 FROM python:3.8
 WORKDIR /app
 COPY harmony/ ./harmony
-COPY conf.yaml pyproject.toml ./
+COPY pyproject.toml ./
 RUN adduser --disabled-password --gecos "" harmony && \
     pip install poetry && \
     poetry config virtualenvs.create false && \

@@ -29,5 +29,13 @@ spec:
               key: api_key
         - name: K8S_API_SERVER_HOST
           value: 'https://kubernetes'
+        volumeMounts:
+        - name: harmony-conf
+          mountPath: /app/config
+          volumes:
         securityContext:
           privileged: true
+      volumes:
+        - name: harmony-conf
+          configMap:
+            name: harmony-conf
