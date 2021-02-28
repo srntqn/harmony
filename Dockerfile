@@ -1,5 +1,6 @@
 FROM python:3.8
 WORKDIR /app
+ENV PYTHONPATH=${PYTHONPATH}:${PWD}
 COPY harmony/ ./harmony
 COPY pyproject.toml ./
 RUN adduser --disabled-password --gecos "" harmony && \
@@ -8,6 +9,4 @@ RUN adduser --disabled-password --gecos "" harmony && \
     poetry install --no-dev && \
     chown -R harmony:harmony /app
 USER harmony
-RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
-ENV PYTHONPATH=${PYTHONPATH}:${PWD}
 ENTRYPOINT ["python", "-u", "harmony/main.py"]
