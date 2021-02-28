@@ -1,0 +1,12 @@
+name: harmony
+namespace: default
+image: docker.pkg.github.com/srntqn/harmony/harmony:0.1.0
+imagePullPolicy: IfNotPresent
+resources:
+  limits:
+    memory: '128Mi'
+    cpu: '200m'
+clusterRole: admin
+secretName: k8s-api-key
+verifyApiSsl: False
+apiHost: https://kubernetes
