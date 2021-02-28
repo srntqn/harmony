@@ -1,9 +1,13 @@
-apiVersion: skaffold/v1beta4
+apiVersion: skaffold/v2beta12
 kind: Config
 build:
   artifacts:
-  - image: harmony
+  - image: docker.pkg.github.com/srntqn/harmony/harmony
 deploy:
-  kubectl:
-    manifests:
-      - deployment.yaml
+  helm:
+    releases:
+    - name: harmony
+      chartPath: chart
+      remote: false
+      artifactOverrides:
+        image: docker.pkg.github.com/srntqn/harmony/harmony

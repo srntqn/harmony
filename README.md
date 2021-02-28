@@ -1,30 +1,16 @@
+**Harmony** is a simple [GitOps](https://www.weave.works/technologies/gitops/) concept implementation.
+It is capable to track an application version changes in a git repository and automatically upgrade a Kubernetes workload
+to fit the version in a git.
+
 ## Prepare local development environment
 
 ### Install third-party tools
 
+* Install and configure [helm](https://helm.sh/docs/intro/install/)
 * Install and configure [docker](https://docs.docker.com/get-docker/)
 * Install and configure [skaffold](https://skaffold.dev/docs/install/)
 * Install and configure [minikube](https://minikube.sigs.k8s.io/docs/start/)
 
-### Configure k8s 
-
-* Setup RBAC
-
-```
-kubectl create serviceaccount harmony
-kubectl create clusterrolebinding harmony --clusterrole=admin --serviceaccount=default:harmony
-```
-* Get harmony ServiceAccount token
-
-`kubectl get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='harmony')].data.token}" | base64 --decode`
-
-* Create Secret with harmony ServiceAccount token
-
-`kubectl create secret generic k8s-api-key --from-literal='api_key={TOKEN}`
-
-* Create ConfigMap with harmony config:
-
-`kubectl create cm harmony-conf --from-file config/conf.yaml`
 
 ### Build and deploy to minikube cluster
 
