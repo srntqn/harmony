@@ -9,5 +9,7 @@ deploy:
     - name: harmony
       chartPath: chart
       remote: false
+      namespace: harmony
+      createNamespace: true
       artifactOverrides:
         image: docker.pkg.github.com/srntqn/harmony/harmony
