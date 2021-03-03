@@ -1,18 +1,13 @@
 import tempfile
-from os import path
 from yaml import dump
 from harmony.core_config import CoreConfig
 
-config_dir = tempfile.gettempdir()
-config_name = 'test_config.yaml'
-
-config = CoreConfig(config_name,
-                    config_dir)
+config_path = tempfile.gettempdir() + '/test_config.yaml'
+config = CoreConfig(config_path)
 
 
 def test_get_projects():
 
-    config_file = path.join(config_dir, config_name)
     config_data = {
         'nginx': {
             'name': 'nginx',
@@ -25,8 +20,8 @@ def test_get_projects():
         }
     }
 
-    with open(config_file, 'w') as f:
-        dump(config_data, f)
+    with open(config_path, 'w') as file:
+        dump(config_data, file)
 
     projects = config.get_projects()
     assert projects['nginx']['name'] == 'nginx'

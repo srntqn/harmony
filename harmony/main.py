@@ -6,7 +6,7 @@ from git_repo import GitRepo
 from k8s_cluster import KubernetesCluster
 from project import Project
 
-projects = CoreConfig('conf.yaml', 'config').get_projects()
+projects = CoreConfig('config/conf.yaml').get_projects()
 cluster = KubernetesCluster(strtobool(getenv('VERIFY_SSL')),
                             getenv('K8S_API_SERVER_HOST'),
                             getenv('K8S_API_KEY'))
@@ -15,7 +15,6 @@ cluster = KubernetesCluster(strtobool(getenv('VERIFY_SSL')),
 def run():
     for project in projects.keys():
 
-        version_file_name = projects[project]['version_file_name']
         name = projects[project]['name']
         version_file_path = projects[project]['version_file_path']
         git_url = projects[project]['git_url']
@@ -34,8 +33,7 @@ def run():
             repo.clone_git_repo()
 
         app = Project(name,
-                      version_file_name,
-                      version_file_path,
+                      repo.repo_name + version_file_path,
                       git_url)
 
         deployment = cluster.get_deployment(app_name, app_namespace)

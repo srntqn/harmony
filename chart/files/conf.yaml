@@ -2,7 +2,6 @@ nginx:
   name: 'nginx'
   git_url: 'https://github.com/srntqn/sample_harmony_version_file_source.git'
   git_branch: 'master'
-  version_file_name: 'version.yaml'
-  version_file_path: './nginx'
+  version_file_path: '/version.yaml'
   app_name: 'nginx-deployment'
   app_namespace: 'default'
