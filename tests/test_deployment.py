@@ -1,5 +1,5 @@
 from unittest import mock
-from harmony.k8s_cluster import KubernetesCluster
+from harmony.libs.k8s_cluster import KubernetesCluster
 
 cluster = KubernetesCluster(False,
                             'localhost',
