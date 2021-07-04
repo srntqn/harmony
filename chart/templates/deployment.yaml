@@ -21,7 +21,7 @@ spec:
       serviceAccountName: {{ .Values.name }}
       containers:
       - name: {{ .Values.name }}
-        image: {{ .Values.image }}:{{ $.Chart.AppVersion }}
+        image: {{ .Values.image }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
