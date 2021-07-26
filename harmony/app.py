@@ -10,6 +10,7 @@ from harmony.libs.git_repo import GitRepo
 from harmony.libs.k8s_cluster import KubernetesCluster
 from harmony.libs.project import Project
 
+WORKDIR = getenv('WORKDIR')
 projects = CoreConfig(getenv('CONFIG_LOCATION')).get_projects()
 cluster = KubernetesCluster(strtobool(getenv('VERIFY_SSL')),
                             getenv('K8S_API_SERVER_HOST'),
@@ -38,7 +39,7 @@ def run():
             repo = GitRepo(name,
                            git_url,
                            git_branch,
-                           '/app')
+                           WORKDIR)
 
             if path.isdir(name):
                 repo.pull_git_repo()
@@ -46,7 +47,7 @@ def run():
                 repo.clone_git_repo()
 
             application = Project(name,
-                                  repo.repo_name + version_file_path,
+                                  WORKDIR + repo.repo_name + version_file_path,
                                   git_url)
 
             deployment = cluster.get_deployment(app_name, app_namespace)
