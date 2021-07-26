@@ -1,7 +1,7 @@
 import time
 import typer
 
-from os import path, getenv
+from os import path, getenv, getcwd
 from distutils.util import strtobool
 
 from . import __version__, __module_name__
@@ -10,7 +10,7 @@ from harmony.libs.git_repo import GitRepo
 from harmony.libs.k8s_cluster import KubernetesCluster
 from harmony.libs.project import Project
 
-projects = CoreConfig('config/conf.yaml').get_projects()
+projects = CoreConfig(getenv('CONFIG_LOCATION')).get_projects()
 cluster = KubernetesCluster(strtobool(getenv('VERIFY_SSL')),
                             getenv('K8S_API_SERVER_HOST'),
                             getenv('K8S_API_KEY'))
@@ -38,7 +38,7 @@ def run():
             repo = GitRepo(name,
                            git_url,
                            git_branch,
-                           './')
+                           '/app')
 
             if path.isdir(name):
                 repo.pull_git_repo()
