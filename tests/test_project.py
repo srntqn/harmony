@@ -4,9 +4,7 @@ from harmony.libs.project import Project
 version_file_path = tempfile.gettempdir() + '/test_version_file.yaml'
 project_name = 'test_project'
 
-project = Project(project_name,
-                  version_file_path,
-                  'git@github.com:srntqn/sample_harmony_version_file_source.git')
+project = Project(project_name, version_file_path)
 
 
 def test_get_project_name():

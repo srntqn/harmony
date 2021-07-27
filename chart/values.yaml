@@ -10,5 +10,4 @@ clusterRole: admin
 secretName: k8s-api-key
 verifyApiSsl: False
 apiHost: https://kubernetes.default
-projectsDir: /projects/
 configLocation: /app/config/conf.yaml

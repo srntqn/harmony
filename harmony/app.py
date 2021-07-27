@@ -1,18 +1,18 @@
 import time
 import typer
 
-from os import path, getenv, getcwd
+from os import getenv
 from distutils.util import strtobool
 
 from . import __version__, __module_name__
 from harmony.libs.core_config import CoreConfig
-from harmony.libs.git_repo import GitRepo
+from harmony.libs.version_file_storage import VersionFileStorage
 from harmony.libs.k8s_cluster import KubernetesCluster
 from harmony.libs.project import Project
 
-WORKDIR = getenv('PROJECTS_DIR')
-projects = CoreConfig(getenv('CONFIG_LOCATION')).get_projects()
-cluster = KubernetesCluster(strtobool(getenv('VERIFY_SSL')),
+
+PROJECTS = CoreConfig(getenv('CONFIG_LOCATION')).get_projects()
+CLUSTER = KubernetesCluster(strtobool(getenv('VERIFY_SSL')),
                             getenv('K8S_API_SERVER_HOST'),
                             getenv('K8S_API_KEY'))
 
@@ -27,44 +27,33 @@ def version() -> None:
 @cli.command(help="Run Harmony")
 def run():
     while True:
-        for project in projects.keys():
+        for project in PROJECTS.keys():
 
-            name = projects[project]['name']
-            version_file_path = projects[project]['version_file_path']
-            git_url = projects[project]['git_url']
-            git_branch = projects[project]['git_branch']
-            app_name = projects[project]['app_name']
-            app_namespace = projects[project]['app_namespace']
+            name = PROJECTS[project]['name']
+            storage_url = PROJECTS[project]['storage_url']
+            version_file_name = PROJECTS[project]['version_file_name']
+            app_name = PROJECTS[project]['app_name']
+            app_namespace = PROJECTS[project]['app_namespace']
 
-            repo = GitRepo(name,
-                           git_url,
-                           git_branch,
-                           WORKDIR)
+            storage = VersionFileStorage(name, storage_url, version_file_name)
 
-            if path.isdir(WORKDIR + name):
-                repo.pull_git_repo()
-            else:
-                repo.clone_git_repo()
+            application = Project(name, storage.get_version_file_local_path())
 
-            application = Project(name,
-                                  WORKDIR + repo.repo_name + version_file_path,
-                                  git_url)
-
-            deployment = cluster.get_deployment(app_name, app_namespace)
+            deployment = CLUSTER.get_deployment(app_name, app_namespace)
 
             image_name = deployment.spec.template.spec.containers[0].image.split(':')[0]
             image_tag_in_cluster = deployment.spec.template.spec.containers[0].image.split(':')[1]
-            image_tag_in_git = application.get_app_version()
+            image_tag_in_storage = application.get_app_version()
 
-            if image_tag_in_git != image_tag_in_cluster:
-                cluster.patch_deployment(deployment,
-                                         '{0}:{1}'.format(image_name, image_tag_in_git),
+            if image_tag_in_storage != image_tag_in_cluster:
+                CLUSTER.patch_deployment(deployment,
+                                         '{0}:{1}'.format(image_name, image_tag_in_storage),
                                          app_name,
                                          app_namespace)
 
                 print('''Image version in cluster: {0}, image version in git: {1}. Updating deployment...
                       '''.format(image_tag_in_cluster,
-                                 image_tag_in_git))
+                                 image_tag_in_storage))
             else:
                 print("Nothing was changed. Versions are equal.")
         time.sleep(20)
