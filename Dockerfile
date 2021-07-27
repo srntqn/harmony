@@ -18,6 +18,7 @@ COPY --from=builder /app /app
 COPY --from=builder /venv /venv
 
 RUN adduser --disabled-password --gecos "" harmony && \
-    chown -R harmony:harmony /app /venv
+    mkdir /projects && \
+    chown -R harmony:harmony /app /venv /projects
 USER harmony
 ENTRYPOINT ["/venv/bin/python", "-m", "harmony", "run"]
