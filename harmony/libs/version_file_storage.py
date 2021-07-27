@@ -1,5 +1,5 @@
 import requests
-from os import getcwd, path, mkdir
+from os import path, mkdir
 
 
 class VersionFileStorage:
@@ -15,10 +15,9 @@ class VersionFileStorage:
 
         file_path = path.join(self.app_name, self.version_file_name)
 
-        r = requests.get(self.storage_url)
+        r = requests.get(self.storage_url).content
 
-        print(getcwd())
         with open(file_path, 'wb+') as f:
-            f.write(r.content)
+            f.write(r)
 
         return file_path
