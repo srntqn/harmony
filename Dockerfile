@@ -1,12 +1,24 @@
-FROM python:3.8
+FROM python:3.8 as builder
 WORKDIR /app
 ENV PYTHONPATH=${PYTHONPATH}:${PWD}
-COPY harmony/ ./harmony
 COPY pyproject.toml ./
-RUN adduser --disabled-password --gecos "" harmony && \
+RUN python3 -m venv /venv && \
+    . /venv/bin/activate && \
     pip install poetry && \
-    poetry config virtualenvs.create false && \
-    poetry install --no-dev && \
-    chown -R harmony:harmony /app
+    poetry install --no-dev --no-root
+COPY harmony/ ./harmony
+RUN . /venv/bin/activate && \
+    poetry install --no-dev
+
+FROM python:3.8
+
+ENV PATH="/venv/bin:${PATH}"
+
+COPY --from=builder /app /app
+COPY --from=builder /venv /venv
+
+RUN adduser --disabled-password --gecos "" harmony && \
+    mkdir /projects && \
+    chown -R harmony:harmony /app /venv /projects
 USER harmony
-ENTRYPOINT ["python", "-u", "harmony/main.py"]
+ENTRYPOINT ["/venv/bin/python", "-m", "harmony", "run"]

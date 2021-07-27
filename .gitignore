@@ -3,6 +3,7 @@ nginx-deployment.yaml
 poetry.toml
 harmony/nginx
 nginx/
+chart/render
 harmony/__pycache__
 #vscode
 .vscode/

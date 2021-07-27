@@ -26,6 +26,10 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         env:
+        - name: PROJECTS_DIR
+          value: '{{ .Values.projectsDir }}'
+        - name: CONFIG_LOCATION
+          value: '{{ .Values.configLocation }}'
         - name: VERIFY_SSL
           value: '{{ .Values.verifyApiSsl }}'
         - name: K8S_API_KEY

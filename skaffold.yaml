@@ -1,8 +1,10 @@
 apiVersion: skaffold/v2beta12
 kind: Config
 build:
+  local:
+    push: false
   artifacts:
-  - image: docker.pkg.github.com/srntqn/harmony/harmony
+  - image: harmony
 deploy:
   helm:
     releases:
@@ -12,4 +14,4 @@ deploy:
       namespace: harmony
       createNamespace: true
       artifactOverrides:
-        image: docker.pkg.github.com/srntqn/harmony/harmony
+        image: harmony

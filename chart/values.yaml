@@ -1,6 +1,6 @@
 name: harmony
 namespace: harmony
-image: docker.pkg.github.com/srntqn/harmony/harmony:0.1.1
+image: docker.pkg.github.com/srntqn/harmony/harmony:0.2.1
 imagePullPolicy: IfNotPresent
 resources:
   limits:
@@ -10,3 +10,5 @@ clusterRole: admin
 secretName: k8s-api-key
 verifyApiSsl: False
 apiHost: https://kubernetes.default
+projectsDir: /projects/
+configLocation: /app/config/conf.yaml

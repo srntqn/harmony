@@ -1,6 +1,6 @@
 import tempfile
 from yaml import dump
-from harmony.core_config import CoreConfig
+from harmony.libs.core_config import CoreConfig
 
 config_path = tempfile.gettempdir() + '/test_config.yaml'
 config = CoreConfig(config_path)
