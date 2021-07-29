@@ -1,4 +1,4 @@
-from harmony.app import cli
+from harmony.cli import cli
 
 
 def main() -> None:
