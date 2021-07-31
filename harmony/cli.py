@@ -13,6 +13,7 @@ from .libs.serializers.project import Project
 from .libs.serializers.config import Config
 from .libs.serializers.image import Image
 from .libs.k8s_deployment import K8sDeployment
+from .libs.sync import sync
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -45,7 +46,7 @@ def run() -> None:
 
             deployment = K8sDeployment(CLUSTER.get_deployment(project.app_name, project.app_namespace))
 
-            version_file.get_version_file()
+            version_file.get_version_file_from_vcs()
 
             image = Image(**{
                 'name': deployment.get_image_name(),
@@ -53,15 +54,10 @@ def run() -> None:
                 'tag_in_vcs': version_file.get_app_version()
             })
 
-            if image.tag_in_vcs != image.tag_in_cluster:
-                CLUSTER.patch_deployment(deployment.get_k8s_spec(),
-                                         f'{image.name}:{image.tag_in_vcs}',
-                                         project.app_name,
-                                         project.app_namespace)
-                logging.info(f"""
-                Image version in cluster: {image.tag_in_cluster}, image version in git: {image.tag_in_vcs}. 
-                Updating deployment...
-                """)
-            else:
-                logging.info(f"Nothing was changed for {prj_name}. Versions are equal.")
+            sync(prj_name,
+                 project,
+                 deployment,
+                 image,
+                 CLUSTER)
+
         time.sleep(20)
