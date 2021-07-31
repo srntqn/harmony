@@ -1,7 +1,7 @@
 import yaml
 
 
-class CoreConfig:
+class ProjectsConfig:
     def __init__(self, config_path: str) -> None:
 
         self.config_path = config_path

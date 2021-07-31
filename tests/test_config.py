@@ -1,9 +1,9 @@
 import tempfile
 from yaml import dump
-from harmony.libs.core_config import CoreConfig
+from harmony.libs.projects_config import ProjectsConfig
 
 config_path = tempfile.gettempdir() + '/test_config.yaml'
-config = CoreConfig(config_path)
+config = ProjectsConfig(config_path)
 
 
 def test_get_projects():

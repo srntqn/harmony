@@ -1,13 +1,13 @@
 from os import path
 from shutil import rmtree
-from harmony.libs.version_file_storage import VersionFileStorage
+from harmony.libs.version_file import VersionFile
 import requests
 
 name = 'mock'
 storage_url = 'http://example.com/version.yaml'
 version_file_name = 'version.yaml'
 
-storage = VersionFileStorage(name, storage_url, version_file_name)
+storage = VersionFile(name, storage_url, version_file_name)
 
 
 class MockResponse:
