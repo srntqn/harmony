@@ -8,7 +8,7 @@ cluster = KubernetesCluster(False,
 
 def test_read_namespaced_deployment_call_during_get_deployment_call():
     cluster.apps.read_namespaced_deployment = mock.MagicMock()
-    cluster.get_deployment('nginx-deployment', 'default')
+    cluster.fetch_deployment('nginx-deployment', 'default')
     cluster.apps.read_namespaced_deployment.assert_called_once_with(name='nginx-deployment',
                                                                     namespace='default')
 

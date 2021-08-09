@@ -1,9 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 
 
 class Project(BaseModel):
     name: str
-    storage_url: str
-    version_file_name: str
+    vcs_url: HttpUrl
     app_name: str
     app_namespace: str
