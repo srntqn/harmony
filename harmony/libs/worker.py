@@ -1,5 +1,3 @@
-from os import mkdir, path
-
 import logging
 import requests
 import yaml
@@ -15,12 +13,16 @@ def read_projects_from_config(config_path: str):
     with open(config_path) as file:
         config = yaml.load(file, Loader=yaml.FullLoader)
 
+    logging.info(f"Reading the following projects data: {config}")
+
     return config
 
 
 def fetch_app_version_from_vcs(vcs_url: str) -> str:
 
     r = yaml.load(requests.get(vcs_url).content, Loader=yaml.FullLoader)
+
+    logging.debug(f"The content of {vcs_url} is {r}")
 
     return r['version']
 

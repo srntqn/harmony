@@ -37,6 +37,8 @@ spec:
               key: token
         - name: K8S_API_SERVER_HOST
           value: '{{ .Values.apiHost }}'
+        - name: LOG_LEVEL
+          value: '{{ .Values.logLevel }}'
         volumeMounts:
         - name: {{ .Values.name }}-conf
           mountPath: /app/config
