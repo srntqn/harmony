@@ -4,22 +4,26 @@ import logging
 import sys
 
 from os import getenv
-from distutils.util import strtobool
 
 from . import __version__, __module_name__
-from harmony.libs.core_config import CoreConfig
-from harmony.libs.version_file_storage import VersionFileStorage
-from harmony.libs.k8s_cluster import KubernetesCluster
-from harmony.libs.project import Project
-from harmony.libs.app import App
-from harmony.libs.k8s_deployment import K8sDeployment
+from .libs.k8s_cluster import KubernetesCluster
+from .libs.serializers.project import Project
+from .libs.serializers.config import Config
+from .libs.serializers.image import Image
+from .libs.k8s_deployment import K8sDeployment
+from .libs.worker import read_projects_from_config, fetch_app_version_from_vcs, sync_versions_in_vcs_and_cluster
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-PROJECTS = CoreConfig(getenv('CONFIG_LOCATION')).get_projects()
-CLUSTER = KubernetesCluster(strtobool(getenv('VERIFY_SSL')),
-                            getenv('K8S_API_SERVER_HOST'),
-                            getenv('K8S_API_KEY'))
+CONFIG = Config(**{'config_location': getenv('CONFIG_LOCATION'),
+                   'verify_ssl': getenv('VERIFY_SSL'),
+                   'k8s_api_server': getenv('K8S_API_SERVER_HOST'),
+                   'k8s_api_key': getenv('K8S_API_KEY')})
+
+PROJECTS = read_projects_from_config(CONFIG.config_location)
+CLUSTER = KubernetesCluster(CONFIG.verify_ssl,
+                            CONFIG.k8s_api_server,
+                            CONFIG.k8s_api_key)
 
 cli = typer.Typer(name=__module_name__)
 
@@ -33,27 +37,23 @@ def version() -> str:
 def run() -> None:
     while True:
         for prj_name, prj_spec in PROJECTS.items():
+
             project = Project(**prj_spec)
 
-            storage = VersionFileStorage(project.name, project.storage_url, project.version_file_name)
+            deployment = K8sDeployment(CLUSTER.fetch_deployment(project.app_name, project.app_namespace))
 
-            application = App(project.name, storage.get_version_file_local_path())
+            version_in_vcs = fetch_app_version_from_vcs(project.vcs_url)
 
-            deployment = K8sDeployment(CLUSTER.get_deployment(project.app_name, project.app_namespace))
+            image = Image(**{
+                'name': deployment.print_image_name(),
+                'tag_in_cluster': deployment.print_image_tag(),
+                'tag_in_vcs': version_in_vcs
+            })
 
-            image_name = deployment.get_image_name()
-            image_tag_in_cluster = deployment.get_image_tag()
-            image_tag_in_storage = application.get_app_version()
+            sync_versions_in_vcs_and_cluster(prj_name,
+                                             project,
+                                             deployment,
+                                             image,
+                                             CLUSTER)
 
-            if image_tag_in_storage != image_tag_in_cluster:
-                CLUSTER.patch_deployment(deployment.get_k8s_spec(),
-                                         '{0}:{1}'.format(image_name, image_tag_in_storage),
-                                         project.app_name,
-                                         project.app_namespace)
-                logging.info(f"""
-                Image version in cluster: {image_tag_in_cluster}, image version in git: {image_tag_in_storage}. 
-                Updating deployment...
-                """)
-            else:
-                logging.info(f"Nothing was changed for {prj_name}. Versions are equal.")
         time.sleep(20)

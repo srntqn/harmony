@@ -1,12 +1,10 @@
 nginx:
   name: 'nginx'
-  storage_url: 'https://raw.githubusercontent.com/srntqn/sample_harmony_version_file_source/master/version.yaml'
-  version_file_name: version.yaml
+  vcs_url: 'https://raw.githubusercontent.com/srntqn/sample_harmony_version_file_source/master/version.yaml'
   app_name: 'nginx-deployment'
   app_namespace: 'default'
 nginx0:
   name: 'nginx'
-  storage_url: 'https://raw.githubusercontent.com/srntqn/sample_harmony_version_file_source/master/version.yaml'
-  version_file_name: version.yaml
+  vcs_url: 'https://raw.githubusercontent.com/srntqn/sample_harmony_version_file_source/master/version.yaml'
   app_name: 'nginx-deployment'
   app_namespace: 'nginx'

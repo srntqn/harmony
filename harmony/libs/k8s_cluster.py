@@ -22,9 +22,9 @@ class KubernetesCluster:
         with ApiClient(self.configuration) as api_client:
             self.apps = AppsV1Api(api_client)
 
-    def get_deployment(self,
-                       name: str,
-                       namespace: str) -> V1Deployment:
+    def fetch_deployment(self,
+                         name: str,
+                         namespace: str) -> V1Deployment:
         return self.apps.read_namespaced_deployment(name=name, namespace=namespace)
 
     def patch_deployment(self,
