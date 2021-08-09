@@ -6,3 +6,4 @@ class Config(BaseModel):
     verify_ssl: bool
     k8s_api_server: HttpUrl
     k8s_api_key: str
+    log_level: str

@@ -11,3 +11,4 @@ secretName: k8s-api-key
 verifyApiSsl: False
 apiHost: https://kubernetes.default
 configLocation: /app/config/conf.yaml
+logLevel: 'INFO'
