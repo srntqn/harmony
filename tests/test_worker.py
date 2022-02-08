@@ -5,6 +5,7 @@ import tempfile
 import requests
 
 import harmony.libs.worker as worker
+from tests.test_data import CLUSTER, DEPLOYMENT, IMAGE, PROJECT
 
 
 class MockResponse:
@@ -37,7 +38,7 @@ def test_read_projects_from_config():
 
 
 def test_fetch_app_version_from_vcs(monkeypatch):
-    vcs_url = 'http://example.com/version.yaml'
+    vcs_url = 'https://example.com/version.yaml'
 
     monkeypatch.setattr(requests, 'get', mocked_requests_get)
     version = worker.fetch_app_version_from_vcs(vcs_url)
@@ -45,3 +46,13 @@ def test_fetch_app_version_from_vcs(monkeypatch):
     assert version == '1.0.0'
 
 
+def test_sync_versions_in_vcs_and_cluster():
+    worker.sync_versions_in_vcs_and_cluster(
+        project_name='test',
+        project=PROJECT,
+        k8s_deployment=DEPLOYMENT,
+        image=IMAGE,
+        k8s_cluster=CLUSTER
+    )
+
+    assert DEPLOYMENT.print_image_tag() == '1.0.1'
