@@ -39,6 +39,10 @@ spec:
           value: '{{ .Values.apiHost }}'
         - name: LOG_LEVEL
           value: '{{ .Values.logLevel }}'
+        - name: PYTHONUNBUFFERED
+          value: '1'
+        - name: PYTHONWARNINGS
+          value: 'ignore:Unverified HTTPS request'
         volumeMounts:
         - name: {{ .Values.name }}-conf
           mountPath: /app/config

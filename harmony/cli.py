@@ -1,7 +1,5 @@
 import time
 import typer
-import logging
-import sys
 
 from . import __version__, __module_name__
 from .libs.k8s_cluster import KubernetesCluster
@@ -16,9 +14,6 @@ PROJECTS = read_projects_from_config(CONFIG.config_location)
 CLUSTER = KubernetesCluster(CONFIG.verify_ssl,
                             CONFIG.k8s_api_server,
                             CONFIG.k8s_api_key)
-
-logging.basicConfig(stream=sys.stdout,
-                    level=logging.getLevelName(CONFIG.log_level))
 
 
 cli = typer.Typer(name=__module_name__)
