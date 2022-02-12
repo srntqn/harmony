@@ -2,6 +2,8 @@ from harmony.libs.serializers.project import Project
 from harmony.libs.k8s_cluster import KubernetesCluster
 from harmony.libs.k8s_deployment import K8sDeployment
 from harmony.libs.serializers.image import Image
+from harmony.libs.serializers.config import Config
+
 from kubernetes.client import V1Deployment, V1ObjectMeta, V1DeploymentSpec, V1Container, V1PodTemplateSpec, V1PodSpec
 
 PROJECT = Project(
@@ -35,4 +37,12 @@ IMAGE = Image(
     name='test',
     tag_in_cluster='1.0.0',
     tag_in_vcs='1.0.1'
+)
+
+CONFIG = Config(
+    config_location='./',
+    verify_ssl=False,
+    k8s_api_server="https://kubernetes.io",
+    k8s_api_key="test_key",
+    log_level="INFO",
 )

@@ -29,5 +29,11 @@ jobs:
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 ./harmony ./tests --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
+        env:
+          CONFIG_LOCATION: test
+          VERIFY_SSL: True
+          K8S_API_SERVER_HOST: https://kubernetes.cluster.local
+          K8S_API_KEY: test
+          LOG_LEVEL: INFO
         run: |
           python -m pytest tests
