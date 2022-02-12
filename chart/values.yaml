@@ -1,6 +1,6 @@
 name: harmony
 namespace: harmony
-image: docker.pkg.github.com/srntqn/harmony/harmony:0.2.1
+image: docker.pkg.github.com/srntqn/harmony/harmony:0.9.0
 imagePullPolicy: IfNotPresent
 resources:
   limits:
